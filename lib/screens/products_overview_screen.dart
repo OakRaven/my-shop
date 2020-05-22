@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import '../widgets/products_grid.dart';
+import 'package:provider/provider.dart';
 
-enum FilterOptions { Favorites, All }
+import '../providers/cart_provider.dart';
+import '../widgets/badge.dart';
+import '../widgets/products_grid.dart';
+import './cart_screen.dart';
+
+enum FilterOptions {
+  Favorites,
+  All,
+}
 
 class ProductsOverviewScreen extends StatefulWidget {
   @override
@@ -34,7 +42,19 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 }
               });
             },
-          )
+          ),
+          Consumer<CartProvider>(
+            builder: (ctx, cart, child) => Badge(
+              child: child,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          ),
         ],
       ),
       body: ProductsGrid(_showOnlyFavorites),

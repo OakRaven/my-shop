@@ -9,6 +9,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -33,18 +34,16 @@ class ProductItem extends StatelessWidget {
                   product.toggleFavoriteStatus();
                 }),
           ),
-          trailing: Consumer<CartProvider>(
-            builder: (ctx, cart, child) => IconButton(
-              icon: Icon(Icons.shopping_cart),
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                cart.addItem(
-                  product.id,
-                  product.price,
-                  product.title,
-                );
-              },
-            ),
+          trailing: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            color: Theme.of(context).accentColor,
+            onPressed: () {
+              cart.addItem(
+                product.id,
+                product.price,
+                product.title,
+              );
+            },
           ),
           backgroundColor: Colors.black87,
           title: Text(
