@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_provider.dart';
+import '../providers/cart_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -32,10 +33,18 @@ class ProductItem extends StatelessWidget {
                   product.toggleFavoriteStatus();
                 }),
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            color: Theme.of(context).accentColor,
-            onPressed: () {},
+          trailing: Consumer<CartProvider>(
+            builder: (ctx, cart, child) => IconButton(
+              icon: Icon(Icons.shopping_cart),
+              color: Theme.of(context).accentColor,
+              onPressed: () {
+                cart.addItem(
+                  product.id,
+                  product.price,
+                  product.title,
+                );
+              },
+            ),
           ),
           backgroundColor: Colors.black87,
           title: Text(
