@@ -48,6 +48,11 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeItem(String id) {
+    _items.remove(id);
+    notifyListeners();
+  }
+
   double get totalAmount {
     double total = 0.0;
 
