@@ -62,4 +62,9 @@ class CartProvider with ChangeNotifier {
 
     return total;
   }
+
+  void clearCart() {
+    _items = {};
+    notifyListeners();
+  }
 }
