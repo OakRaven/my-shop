@@ -32,6 +32,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if ((!_imageUrlController.text.startsWith('http') &&
+              !_imageUrlController.text.startsWith('https')) ||
+          (!_imageUrlController.text.endsWith('.png') &&
+              !_imageUrlController.text.endsWith('.jpg') &&
+              !_imageUrlController.text.endsWith('.jpeg'))) {
+        return;
+      }
+
       setState(() {});
     }
   }
@@ -50,6 +58,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+
     _form.currentState.save();
     print(_product.title);
     print(_product.price);
@@ -82,6 +95,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocusNode);
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Required';
+                    }
+
+                    return null;
+                  },
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -100,6 +120,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Required';
+                    }
+
+                    if (double.tryParse(value) == null) {
+                      return 'Must be a valid number.';
+                    }
+
+                    if (double.parse(value) < 0.01) {
+                      return 'Must be greater than \$0.01';
+                    }
+
+                    return null;
+                  },
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -115,6 +150,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
                   focusNode: _descriptionFocusNode,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Required';
+                    }
+
+                    if (value.length < 10) {
+                      return 'Must be at least 10 characters';
+                    }
+
+                    return null;
+                  },
                   onSaved: (value) {
                     _product = Product(
                       id: _product.id,
@@ -137,7 +183,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         width: 1,
                         color: Colors.grey,
                       )),
-                      child: _imageUrlController.text.isEmpty
+                      child: _imageUrlController.text.length == 0
                           ? Text('Enter a URL')
                           : FittedBox(
                               child: Image.network(
@@ -155,6 +201,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         focusNode: _imageUrlFocusNode,
                         onFieldSubmitted: (_) {
                           _saveForm();
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Required';
+                          }
+
+                          if (!value.startsWith('http') &&
+                              !value.startsWith('https')) {
+                            return 'Invalid URL';
+                          }
+
+                          if (!value.endsWith('.png') &&
+                              !value.endsWith('.jpg') &&
+                              !value.endsWith('.jpeg')) {
+                            return 'Invalid URL';
+                          }
+
+                          return null;
                         },
                         onSaved: (value) {
                           _product = Product(
