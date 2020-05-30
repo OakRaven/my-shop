@@ -60,6 +60,15 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateProduct(Product product) {
+    final index = _items.indexWhere((prod) => prod.id == product.id);
+
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
+  }
+
   Product findById(String productId) {
     return _items.firstWhere((item) => item.id == productId);
   }
