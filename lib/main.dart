@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'MyShop',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
